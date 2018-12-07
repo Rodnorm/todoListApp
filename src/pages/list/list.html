@@ -8,16 +8,46 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
-      <ion-icon [name]="item.icon" item-start></ion-icon>
-      {{item.title}}
+  <button *ngIf="!edit && !add" ion-button color="secondary" round (click)="add = true;">Adicionar</button>
+  <ion-list *ngIf="!edit && !add">
+
+    <button ion-item *ngFor="let task of tasks" (click)="itemTapped(task)">
+      {{task?.name}}
       <div class="item-note" item-end>
-        {{item.note}}
+        {{task?.date}}
       </div>
     </button>
   </ion-list>
-  <div *ngIf="selectedItem" padding>
-    You navigated here from <b>{{selectedItem.title}}</b>
+  <div *ngIf="edit || add">
+    <ion-list (ngSubmit)="saveTask()">
+      <ion-item>
+        <ion-label floating>Nome da tarefa</ion-label>
+        <ion-input type="text" [(ngModel)]="newItem.name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="date" [(ngModel)]="newItem.date" placeholder="Data"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Descrição</ion-label>
+        <ion-input type="text" [(ngModel)]="newItem.description"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Responsável</ion-label>
+        <ion-input type="text" [(ngModel)]="newItem.responsible"></ion-input>
+      </ion-item>
+      <div padding>
+        <button ion-button color="secondary" (click)="saveTask()">
+          <ion-icon name="checkmark"></ion-icon>
+        </button>
+        <button ion-button icon-only (click)="newItemReset()">
+          <ion-icon name="close"></ion-icon>
+        </button>
+        <button *ngIf="!add && edit" ion-button color="danger" (click)="remove()">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </div>
+    </ion-list>
   </div>
+
 </ion-content>
